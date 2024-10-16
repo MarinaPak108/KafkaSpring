@@ -5,6 +5,7 @@ import com.coffee.kafkaspringproject.repo.CoffeeBagRepo;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +17,7 @@ public class CoffeeBagListener {
         this.coffeeBagRepo = coffeeBagRepo;
     }
 
-    @org.springframework.kafka.annotation.KafkaListener (topics = "new-coffee-bag", groupId = "coffee-group")
+    @KafkaListener(topics = "new-coffee-bag", groupId = "coffee-group")
     public void listenNewCoffeeBag(ConsumerRecord<String, CoffeeBagEntity> record) {
         CoffeeBagEntity newBag = record.value();
         try {
