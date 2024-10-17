@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package com.coffee.kafkaspringproject;
+
+service RoastingService {
+  // gRPC method that receives roasting data and returns a confirmation response.
+  rpc ReportRoasting (RoastingRequest) returns (RoastingResponse);
+}
+
+// The request message sent by the client.
+message RoastingRequest {
+  string origin_country = 1;
+  double initial_weight = 2;
+  double output_weight = 3;
+  string team_id = 4;  // UUID as string
+}
+
+// The response message sent by the server.
+message RoastingResponse {
+  string message = 1;  // Confirmation message
+}

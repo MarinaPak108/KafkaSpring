@@ -19,15 +19,12 @@ public class Controller {
 
     @GetMapping("/")
     String home(){
-        CoffeeBagEntity mockCoffeeBag = new CoffeeBagEntity("Brazil", 60, 70, 30);
-
+        CoffeeBagEntity mockCoffeeBag = new CoffeeBagEntity("Arabica", 65, 25, 30, 2);
         // Simulate a Kafka ConsumerRecord with the mock CoffeeBag
         ConsumerRecord<String, CoffeeBagEntity> record = new ConsumerRecord<>(
-                "new-coffee-bag", 0, 0L, "key1", mockCoffeeBag
+                "new-coffee-bag", 0, 0L, "key2", mockCoffeeBag
         );
-
         coffeeListener.listenNewCoffeeBag(record);
-
         return ("first check");
     }
 }

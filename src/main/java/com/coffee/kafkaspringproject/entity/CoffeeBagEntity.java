@@ -17,18 +17,31 @@ public class CoffeeBagEntity {
     private double arabicaPercentage;  // Процент арабики
     @Column(name = "robusta_percentage")
     private double robustaPercentage;  // Процент робусты
-    @Column(name = "weight_in_grams", nullable = false)
-    private int weightInGrams = 60000;  // Вес мешка (60 кг в граммах)
+
+    @Column(name = "weight_in_kg", nullable = false)
+    private int weightInKg;  // Вес мешка (60 кг)
+
+    @Column(name = "weight_left")
+    private int weightLeft;
+
+    @Column(name = "coffee_sort", nullable = false)
+    private int coffeeSort;
 
     public CoffeeBagEntity() {
         // Default constructor for JPA
     }
+    // will recieve number of bags and convert to kg
+    public CoffeeBagEntity(String originCountry, double arabicaPercentage, double robustaPercentage, int nrOfBags, int coffeeSort) {
+        //convert bags to kg, considering 1 bag is 60 kg
+        int weightInKg = nrOfBags*60;
 
-    public CoffeeBagEntity(String originCountry, double arabicaPercentage, double robustaPercentage, int weightInGrams) {
         this.originCountry = originCountry;
         this.arabicaPercentage = arabicaPercentage;
         this.robustaPercentage = robustaPercentage;
-        this.weightInGrams = weightInGrams;
+        this.weightInKg = weightInKg;
+        //by default weight left equals to weight in kg
+        this.weightLeft = weightInKg;
+        this.coffeeSort = coffeeSort;
     }
 
     // Getters and Setters
@@ -43,17 +56,27 @@ public class CoffeeBagEntity {
     public double getRobustaPercentage() { return robustaPercentage; }
     public void setRobustaPercentage(double robustaPercentage) { this.robustaPercentage = robustaPercentage; }
 
-    public int getWeightInGrams() { return weightInGrams; }
-    public void setWeightInGrams(int weightInGrams) { this.weightInGrams = weightInGrams; }
+    public int getWeightInKg() { return weightInKg; }
+    public void setWeightInKg(int weightInGrams) { this.weightInKg = weightInGrams; }
+
+    public int getWeightLeft() {
+        return weightLeft;
+    }
+
+    public void setWeightLeft(int weightLeft) {
+        this.weightLeft = weightLeft;
+    }
 
     @Override
     public String toString() {
-        return "CoffeeBag{" +
+        return "CoffeeBagEntity{" +
                 "id=" + id +
                 ", originCountry='" + originCountry + '\'' +
                 ", arabicaPercentage=" + arabicaPercentage +
                 ", robustaPercentage=" + robustaPercentage +
-                ", weightInGrams=" + weightInGrams +
+                ", weightInKg=" + weightInKg +
+                ", weightLeft=" + weightLeft +
+                ", coffeeSort=" + coffeeSort +
                 '}';
     }
 }
