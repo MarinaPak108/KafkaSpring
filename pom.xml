@@ -28,9 +28,6 @@
     </scm>
     <properties>
         <java.version>17</java.version>
-        <grpc.version>1.56.0</grpc.version>
-        <protobuf.version>3.23.0</protobuf.version>
-        <os.detected.classifier>${java.home}/../../bin</os.detected.classifier>
     </properties>
     <dependencies>
         <dependency>
@@ -53,17 +50,17 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>${grpc.version}</version>
+            <version>1.56.0</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
-            <version>${grpc.version}</version>
+            <version>1.56.0</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>${grpc.version}</version>
+            <version>1.56.0</version>
         </dependency>
 
         <dependency>
@@ -71,8 +68,6 @@
             <artifactId>grpc-server-spring-boot-starter</artifactId>
             <version>2.14.0.RELEASE</version>
         </dependency>
-
-
 
         <dependency>
             <groupId>com.mysql</groupId>
@@ -97,6 +92,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- to resolve the missing Generated symbol in target\generated-sources\protobuf\grpc-java\RoastingServiceGrpc -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version> <!-- Compatible with Java 9+ -->
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -109,15 +112,6 @@
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
-                <configuration>
-                    <protocArtifact>
-                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-                    </protocArtifact>
-                    <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>
-                        io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
-                    </pluginArtifact>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -126,8 +120,16 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <protocArtifact>
+                        com.google.protobuf:protoc:3.23.0:exe:windows-x86_64
+                    </protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>
+                        io.grpc:protoc-gen-grpc-java:1.56.0:exe:windows-x86_64
+                    </pluginArtifact>
+                </configuration>
             </plugin>
-
         </plugins>
     </build>
 

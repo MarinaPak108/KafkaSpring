@@ -1,5 +1,10 @@
 syntax = "proto3";
 
+
+option java_multiple_files = true;
+option java_package = "com.coffee.kafkaspringproject";
+option java_outer_classname = "RoastingProto";
+
 package com.coffee.kafkaspringproject;
 
 service RoastingService {
@@ -9,10 +14,10 @@ service RoastingService {
 
 // The request message sent by the client.
 message RoastingRequest {
-  string origin_country = 1;
-  double initial_weight = 2;
-  double output_weight = 3;
-  string team_id = 4;  // UUID as string
+  string origin_country = 1;  // Maps to: private String originCountry;
+  int32 coffee_sort = 2;      // Maps to: private int coffeeSort;
+  int32 output_weight = 3;    // Maps to: private int outputWeight;
+  string team_id = 4;         // Maps to: private UUID as string teamId;
 }
 
 // The response message sent by the server.

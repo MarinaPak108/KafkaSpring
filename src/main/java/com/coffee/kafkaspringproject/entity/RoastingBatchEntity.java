@@ -18,7 +18,7 @@ public class RoastingBatchEntity {
     @Column(name = "output_weight", nullable = false)
     private int outputWeight;
     @Column(name = "team_id", nullable = false, length = 36)
-    private UUID teamId;
+    private String teamId;
 
     public RoastingBatchEntity() {
     }
@@ -27,7 +27,9 @@ public class RoastingBatchEntity {
         this.originCountry = originCountry;
         this.coffeeSort = coffeeSort;
         this.outputWeight = outputWeight;
-        this.teamId = teamId;
+
+        //convert to String!!!
+        this.teamId = teamId.toString();
     }
 
     public Long getBatchId() {
@@ -62,12 +64,17 @@ public class RoastingBatchEntity {
         this.outputWeight = outputWeight;
     }
 
-    public UUID getTeamId() {
+
+    public UUID getUUIDTeamId() {
+        return UUID.fromString(teamId);
+    }
+
+    public  String getStringTeamId(){
         return teamId;
     }
 
     public void setTeamId(UUID teamId) {
-        this.teamId = teamId;
+        this.teamId = teamId.toString();
     }
 
     @Override
