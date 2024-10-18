@@ -17,16 +17,21 @@ public class RoastingBatchEntity {
     private int coffeeSort;
     @Column(name = "output_weight", nullable = false)
     private int outputWeight;
+    @Column(name = "input_weight", nullable = false)
+    private int inputWeight;
     @Column(name = "team_id", nullable = false, length = 36)
     private String teamId;
+    @Column(name = "loss_percentage")
+    private double lossPercentage;
 
     public RoastingBatchEntity() {
     }
 
-    public RoastingBatchEntity(String originCountry, int coffeeSort, int outputWeight, UUID teamId) {
+    public RoastingBatchEntity(String originCountry, int coffeeSort, int outputWeight, int inputWeight, UUID teamId) {
         this.originCountry = originCountry;
         this.coffeeSort = coffeeSort;
         this.outputWeight = outputWeight;
+        this.inputWeight = inputWeight;
 
         //convert to String!!!
         this.teamId = teamId.toString();
@@ -77,6 +82,22 @@ public class RoastingBatchEntity {
         this.teamId = teamId.toString();
     }
 
+    public int getInputWeight() {
+        return inputWeight;
+    }
+
+    public void setInputWeight(int inputWeight) {
+        this.inputWeight = inputWeight;
+    }
+
+    public double getLossPercentage() {
+        return lossPercentage;
+    }
+
+    public void setLossPercentage(double lossPercentage) {
+        this.lossPercentage = lossPercentage;
+    }
+
     @Override
     public String toString() {
         return "RoastingBatchEntity{" +
@@ -84,7 +105,9 @@ public class RoastingBatchEntity {
                 ", originCountry='" + originCountry + '\'' +
                 ", coffeeSort=" + coffeeSort +
                 ", outputWeight=" + outputWeight +
-                ", teamId=" + teamId +
+                ", inputWeight=" + inputWeight +
+                ", teamId='" + teamId + '\'' +
+                ", lossPercentage=" + lossPercentage +
                 '}';
     }
 }

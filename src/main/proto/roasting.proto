@@ -18,9 +18,11 @@ message RoastingRequest {
   int32 coffee_sort = 2;      // Maps to: private int coffeeSort;
   int32 output_weight = 3;    // Maps to: private int outputWeight;
   string team_id = 4;         // Maps to: private UUID as string teamId;
+  int32 input_weight = 5;     // Maps to: private int inputWeight;
 }
 
 // The response message sent by the server.
 message RoastingResponse {
   string message = 1;  // Confirmation message
+  string status = 2;   // Status message (e.g., "SUCCESS" or "ERROR")
 }

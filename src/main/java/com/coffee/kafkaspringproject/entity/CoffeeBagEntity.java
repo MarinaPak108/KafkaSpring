@@ -18,8 +18,8 @@ public class CoffeeBagEntity {
     @Column(name = "robusta_percentage")
     private double robustaPercentage;  // Процент робусты
 
-    @Column(name = "weight_in_kg", nullable = false)
-    private int weightInKg;  // Вес мешка (60 кг)
+    @Column(name = "weight_in_gram", nullable = false)
+    private int weightInGr;  // Вес мешка (60 кг) => 60000
 
     @Column(name = "weight_left")
     private int weightLeft;
@@ -32,15 +32,15 @@ public class CoffeeBagEntity {
     }
     // will recieve number of bags and convert to kg
     public CoffeeBagEntity(String originCountry, double arabicaPercentage, double robustaPercentage, int nrOfBags, int coffeeSort) {
-        //convert bags to kg, considering 1 bag is 60 kg
-        int weightInKg = nrOfBags*60;
+        //convert bags to kg, considering 1 bag is 60 kg => 60000 gram
+        int weightInGr = nrOfBags*60000;
 
         this.originCountry = originCountry;
         this.arabicaPercentage = arabicaPercentage;
         this.robustaPercentage = robustaPercentage;
-        this.weightInKg = weightInKg;
+        this.weightInGr = weightInGr;
         //by default weight left equals to weight in kg
-        this.weightLeft = weightInKg;
+        this.weightLeft = weightInGr;
         this.coffeeSort = coffeeSort;
     }
 
@@ -56,8 +56,8 @@ public class CoffeeBagEntity {
     public double getRobustaPercentage() { return robustaPercentage; }
     public void setRobustaPercentage(double robustaPercentage) { this.robustaPercentage = robustaPercentage; }
 
-    public int getWeightInKg() { return weightInKg; }
-    public void setWeightInKg(int weightInGrams) { this.weightInKg = weightInGrams; }
+    public int getWeightInKg() { return weightInGr; }
+    public void setWeightInKg(int weightInGrams) { this.weightInGr = weightInGrams; }
 
     public int getWeightLeft() {
         return weightLeft;
@@ -74,7 +74,7 @@ public class CoffeeBagEntity {
                 ", originCountry='" + originCountry + '\'' +
                 ", arabicaPercentage=" + arabicaPercentage +
                 ", robustaPercentage=" + robustaPercentage +
-                ", weightInKg=" + weightInKg +
+                ", weightInGr=" + weightInGr +
                 ", weightLeft=" + weightLeft +
                 ", coffeeSort=" + coffeeSort +
                 '}';
