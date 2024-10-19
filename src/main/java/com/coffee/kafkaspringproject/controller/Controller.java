@@ -7,6 +7,8 @@ import com.coffee.kafkaspringproject.listener.CoffeeBagListener;
 import com.coffee.kafkaspringproject.service.RoastingService;
 import com.coffee.kafkaspringproject.service.StockLossService;
 import io.grpc.stub.StreamObserver;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
+@Tag(name = "Coffee Company", description = "Coffee Api")
 @RestController
 public class Controller {
 
@@ -149,8 +152,9 @@ public class Controller {
         return "completed";
     }
 
-
-
+    @Operation(
+            summary = "shows all coffee remainders aka stock",
+            description = "shows coffee remainder after roasting filtered by origin country and/or coffee sort. if nothing is entered, then shows all remainders")
     @GetMapping("/stock")
     public ResponseEntity<?> getStock(
             @RequestParam(required = false) String country,
@@ -165,6 +169,9 @@ public class Controller {
         }
     }
 
+    @Operation(
+            summary = "shows loss percentage after roasting",
+            description = "shows mean loss percentage after roasting filtered by team and/or origin country. if record with combination team with country cant be found, shows error message")
     @GetMapping("/loss-percentage")
     public ResponseEntity<?> getLossPercentage(
             @RequestParam(required = false) String teamId,
