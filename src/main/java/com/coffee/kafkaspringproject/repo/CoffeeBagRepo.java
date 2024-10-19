@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CoffeeBagRepo extends JpaRepository<CoffeeBagEntity, Long> {
@@ -41,6 +42,12 @@ public interface CoffeeBagRepo extends JpaRepository<CoffeeBagEntity, Long> {
     @Query("SELECT SUM(r.weightLeft) FROM CoffeeBagEntity r WHERE r.weightLeft > 0")
     Integer sumWeightLeft();
 
+    Optional<CoffeeBagEntity> findCoffeeBagEntityByOriginCountryAndArabicaPercentageAndRobustaPercentageAndWeightLeftAndCoffeeSort
+            (String originCountry,
+             double arabica,
+             double robusta,
+             int weightLeft,
+             int coffeeSort);
 
 }
 

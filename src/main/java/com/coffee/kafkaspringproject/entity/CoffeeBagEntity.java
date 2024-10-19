@@ -56,15 +56,28 @@ public class CoffeeBagEntity {
     public double getRobustaPercentage() { return robustaPercentage; }
     public void setRobustaPercentage(double robustaPercentage) { this.robustaPercentage = robustaPercentage; }
 
-    public int getWeightInKg() { return weightInGr; }
-    public void setWeightInKg(int weightInGrams) { this.weightInGr = weightInGrams; }
-
     public int getWeightLeft() {
         return weightLeft;
     }
 
     public void setWeightLeft(int weightLeft) {
         this.weightLeft = weightLeft;
+    }
+
+    public int getWeightInGr() {
+        return weightInGr;
+    }
+
+    public void setWeightInGr(int weightInGr) {
+        this.weightInGr = weightInGr;
+    }
+
+    public int getCoffeeSort() {
+        return coffeeSort;
+    }
+
+    public void setCoffeeSort(int coffeeSort) {
+        this.coffeeSort = coffeeSort;
     }
 
     @Override

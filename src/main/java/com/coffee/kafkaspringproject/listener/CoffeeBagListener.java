@@ -19,6 +19,10 @@ public class CoffeeBagListener {
 
     @KafkaListener(topics = "new-coffee-bag", groupId = "coffee-group")
     public void listenNewCoffeeBag(ConsumerRecord<String, CoffeeBagEntity> record) {
+        logger.info(
+                "Received a consumer record with coffee origin country:{}: ",
+                record.value().getOriginCountry()
+        );
         CoffeeBagEntity newBag = record.value();
         try {
             coffeeBagRepo.save(newBag);  // Save new coffee bag to the database
