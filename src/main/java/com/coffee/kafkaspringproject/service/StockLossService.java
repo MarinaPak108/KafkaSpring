@@ -65,6 +65,7 @@ public class StockLossService {
     }
 
     public double getLossPercentage(String teamId, String country) {
+        // add if no records regarding combination team id + country in db then throw msg with error
         if(teamId != null && country != null){
             return roastingBatchRepo.findAverageLossByCountryAndTeamId(country, teamId);
         } else if (country != null){
