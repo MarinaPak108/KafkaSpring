@@ -40,13 +40,13 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- Kafka для получения сообщений -->
+        <!-- Kafka -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
-        <!-- gRPC для коммуникации -->
+        <!-- gRPC -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
@@ -75,7 +75,7 @@
             <version>8.0.32</version>
         </dependency>
 
-        <!-- Swagger для документации -->
+        <!-- Swagger -->
         <!-- http://localhost:8080/swagger-ui/index.html# -->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -106,6 +106,25 @@
         </dependency>
 
         <!-- tests -->
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-client-spring-boot-starter</artifactId>
+            <version>2.13.1.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/net.devh/grpc-client-spring-boot-autoconfigure -->
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-client-spring-boot-autoconfigure</artifactId>
+            <version>2.15.0.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/net.devh/grpc-server-spring-boot-autoconfigure -->
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-server-spring-boot-autoconfigure</artifactId>
+            <version>2.15.0.RELEASE</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka-test -->
         <dependency>
             <groupId>org.springframework.kafka</groupId>
@@ -159,6 +178,11 @@
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
+                <configuration>
+                    <protocArtifact>com.google.protobuf:protoc:3.25.4:exe:${os.detected.classifier}</protocArtifact>
+                    <pluginId>grpc-java</pluginId>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.66.0:exe:${os.detected.classifier}</pluginArtifact>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -167,15 +191,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <protocArtifact>
-                        com.google.protobuf:protoc:3.23.0:exe:windows-x86_64
-                    </protocArtifact>
-                    <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>
-                        io.grpc:protoc-gen-grpc-java:1.56.0:exe:windows-x86_64
-                    </pluginArtifact>
-                </configuration>
             </plugin>
         </plugins>
     </build>

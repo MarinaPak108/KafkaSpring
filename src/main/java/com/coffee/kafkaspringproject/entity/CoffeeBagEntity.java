@@ -9,17 +9,17 @@ public class CoffeeBagEntity {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // Auto-increment primary key
+    private Long id;
 
     @Column(name = "origin_country", length = 100)
-    private String originCountry;  // Страна происхождения
+    private String originCountry;
     @Column(name = "arabica_percentage")
-    private double arabicaPercentage;  // Процент арабики
+    private double arabicaPercentage;
     @Column(name = "robusta_percentage")
-    private double robustaPercentage;  // Процент робусты
+    private double robustaPercentage;
 
     @Column(name = "weight_in_gram", nullable = false)
-    private int weightInGr;  // Вес мешка (60 кг) => 60000
+    private int weightInGr;
 
     @Column(name = "weight_left")
     private int weightLeft;
@@ -28,12 +28,12 @@ public class CoffeeBagEntity {
     private int coffeeSort;
 
     public CoffeeBagEntity() {
-        // Default constructor for JPA
     }
+
     // will recieve number of bags and convert to kg
     public CoffeeBagEntity(String originCountry, double arabicaPercentage, double robustaPercentage, int nrOfBags, int coffeeSort) {
         //convert bags to kg, considering 1 bag is 60 kg => 60000 gram
-        int weightInGr = nrOfBags*60000;
+        int weightInGr = nrOfBags * 60000;
 
         this.originCountry = originCountry;
         this.arabicaPercentage = arabicaPercentage;
@@ -45,16 +45,33 @@ public class CoffeeBagEntity {
     }
 
     // Getters and Setters
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getOriginCountry() { return originCountry; }
-    public void setOriginCountry(String originCountry) { this.originCountry = originCountry; }
+    public String getOriginCountry() {
+        return originCountry;
+    }
 
-    public double getArabicaPercentage() { return arabicaPercentage; }
-    public void setArabicaPercentage(double arabicaPercentage) { this.arabicaPercentage = arabicaPercentage; }
+    public void setOriginCountry(String originCountry) {
+        this.originCountry = originCountry;
+    }
 
-    public double getRobustaPercentage() { return robustaPercentage; }
-    public void setRobustaPercentage(double robustaPercentage) { this.robustaPercentage = robustaPercentage; }
+    public double getArabicaPercentage() {
+        return arabicaPercentage;
+    }
+
+    public void setArabicaPercentage(double arabicaPercentage) {
+        this.arabicaPercentage = arabicaPercentage;
+    }
+
+    public double getRobustaPercentage() {
+        return robustaPercentage;
+    }
+
+    public void setRobustaPercentage(double robustaPercentage) {
+        this.robustaPercentage = robustaPercentage;
+    }
 
     public int getWeightLeft() {
         return weightLeft;
@@ -79,6 +96,7 @@ public class CoffeeBagEntity {
     public void setCoffeeSort(int coffeeSort) {
         this.coffeeSort = coffeeSort;
     }
+
 
     @Override
     public String toString() {

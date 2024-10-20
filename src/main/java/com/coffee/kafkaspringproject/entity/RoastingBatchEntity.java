@@ -37,6 +37,17 @@ public class RoastingBatchEntity {
         this.teamId = teamId.toString();
     }
 
+    public RoastingBatchEntity(String originCountry, int coffeeSort, int outputWeight, int inputWeight, UUID teamId, int lossPercentage) {
+        this.originCountry = originCountry;
+        this.coffeeSort = coffeeSort;
+        this.outputWeight = outputWeight;
+        this.inputWeight = inputWeight;
+
+        //convert to String!!!
+        this.teamId = teamId.toString();
+        this.lossPercentage = lossPercentage;
+    }
+
     public Long getBatchId() {
         return batchId;
     }

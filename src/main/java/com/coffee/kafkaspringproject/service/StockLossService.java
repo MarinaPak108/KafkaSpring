@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
 @Component
 public class StockLossService {
@@ -26,16 +25,16 @@ public class StockLossService {
         List<CoffeeBagEntity> bags = coffeeBagRepo.findByCountryAndSortWithWeightLeftNotZero(batch.getOriginCountry(), batch.getCoffeeSort());
         //!!considering that received messages are correct, batch.inWeight always less then sum of bagS.leftWeight
         int toSubstractWeight = batch.getInputWeight(); // 120 000  // 50 000
-        int sumStock = coffeeBagRepo.sumWeightLeftByOriginCountryAndCoffeeSort(batch.getCoffeeSort(), batch.getOriginCountry());
+        Integer sumStock = coffeeBagRepo.sumWeightLeftByOriginCountryAndCoffeeSort(batch.getCoffeeSort(), batch.getOriginCountry());
         int bagsIndex = 0;
         while(toSubstractWeight>0 & bagsIndex<bags.size()){
             CoffeeBagEntity bag = bags.get(bagsIndex);
             int toRecordWeight=0;
-            if(toSubstractWeight >= bag.getWeightLeft()){ // 120 000 vs 70 000 // 50 000 vs 300 000
-                toSubstractWeight -= bag.getWeightLeft(); //50 000
+            if(toSubstractWeight >= bag.getWeightLeft()){
+                toSubstractWeight -= bag.getWeightLeft();
             }
             else{
-                toRecordWeight = bag.getWeightLeft()-toSubstractWeight; //     // 300 000 - 50 000 = 250 000
+                toRecordWeight = bag.getWeightLeft()-toSubstractWeight;
                 toSubstractWeight=0;
             }
             bag.setWeightLeft(toRecordWeight);
@@ -65,15 +64,28 @@ public class StockLossService {
     }
 
     public double getLossPercentage(String teamId, String country) {
+        Double averageLoss = null;
         // add if no records regarding combination team id + country in db then throw msg with error
         if(teamId != null && country != null){
-            return roastingBatchRepo.findAverageLossByCountryAndTeamId(country, teamId);
+            averageLoss = roastingBatchRepo.findAverageLossByCountryAndTeamId(country, teamId);
+            checkIfAvaliabble(averageLoss, "No records found for the combination of teamId: " + teamId + " and country: " + country);
+            return averageLoss;
         } else if (country != null){
-            return roastingBatchRepo.findAverageLossByCountry(country);
+            averageLoss= roastingBatchRepo.findAverageLossByCountry(country);
+            checkIfAvaliabble(averageLoss,"No records found for country: " + country);
+            return averageLoss;
         } else if(teamId != null){
-            return roastingBatchRepo.findAverageLossByTeamId(teamId);
+            averageLoss= roastingBatchRepo.findAverageLossByTeamId(teamId);
+            checkIfAvaliabble(averageLoss,"No records found for teamId: " + teamId);
+            return averageLoss;
         } else {
             return roastingBatchRepo.findAverageLoss();
+        }
+    }
+
+    private void checkIfAvaliabble(Double value, String msg){
+        if (value == null) {
+            throw new IllegalArgumentException(msg);
         }
     }
 }

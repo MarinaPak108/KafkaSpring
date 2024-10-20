@@ -1,8 +1,9 @@
 package com.coffee.kafkaspringproject.listener;
 
+
+import com.coffee.kafkaspringproject.dto.event.CoffeeBagEventDTO;
 import com.coffee.kafkaspringproject.entity.CoffeeBagEntity;
 import com.coffee.kafkaspringproject.repo.CoffeeBagRepo;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,18 +18,24 @@ public class CoffeeBagListener {
         this.coffeeBagRepo = coffeeBagRepo;
     }
 
-    @KafkaListener(topics = "new-coffee-bag", groupId = "coffee-group")
-    public void listenNewCoffeeBag(ConsumerRecord<String, CoffeeBagEntity> record) {
-        logger.info(
-                "Received a consumer record with coffee origin country:{}: ",
-                record.value().getOriginCountry()
-        );
-        CoffeeBagEntity newBag = record.value();
+    @KafkaListener(id = "new-coffee-bag-id", topics = "new-coffee-bag", groupId = "coffee-group")
+    public void listenNewCoffeeBag(CoffeeBagEventDTO event) {
+        logger.info("Received coffee bag event with origin country: {}", event.getOriginCountry());
         try {
-            coffeeBagRepo.save(newBag);  // Save new coffee bag to the database
-            logger.info("Saved new coffee bag: {}", newBag);
+            // Convert CoffeeBagEventDTO to CoffeeBagEntity
+            CoffeeBagEntity coffeeBagEntity = new CoffeeBagEntity(
+                    event.getOriginCountry(),
+                    event.getArabicaPercentage(),
+                    event.getRobustaPercentage(),
+                    event.getNrOfBags(),
+                    event.getCoffeeSort()
+            );
+
+            // Save the entity to the database
+            coffeeBagRepo.save(coffeeBagEntity);
+            logger.info("Saved new coffee bag: {}", coffeeBagEntity);
         } catch (Exception e) {
-            logger.error("Failed to save coffee bag: {}", newBag, e);
+            logger.error("Failed to save coffee bag event: {}", event, e);
         }
     }
 }

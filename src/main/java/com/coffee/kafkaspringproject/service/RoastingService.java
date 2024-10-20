@@ -41,16 +41,16 @@ public class RoastingService extends RoastingServiceGrpc.RoastingServiceImplBase
                     .setMessage("Roasting data saved successfully")
                     .setStatus("SUCCESS")
                     .build();
-
-            // Send the response and complete the stream
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
             logger.info("Saved roasting batch data: {}", batch);
 
             //count loss and update
             service.updateLoss(savedBatch.getBatchId(), savedBatch.getInputWeight(), savedBatch.getOutputWeight());
             //reflect stock remainders
             service.updateStock(savedBatch);
+
+            // Send the response and complete the stream
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
         } catch (Exception e) {
             logger.error("Failed to save roasting batch data: {}", batch, e);
             // Build a gRPC error status and propagate it to the client
@@ -63,5 +63,6 @@ public class RoastingService extends RoastingServiceGrpc.RoastingServiceImplBase
             responseObserver.onCompleted();
         }
     }
+
 
 }
