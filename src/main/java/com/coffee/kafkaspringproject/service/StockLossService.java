@@ -2,8 +2,11 @@ package com.coffee.kafkaspringproject.service;
 
 import com.coffee.kafkaspringproject.entity.CoffeeBagEntity;
 import com.coffee.kafkaspringproject.entity.RoastingBatchEntity;
+import com.coffee.kafkaspringproject.listener.CoffeeBagListener;
 import com.coffee.kafkaspringproject.repo.CoffeeBagRepo;
 import com.coffee.kafkaspringproject.repo.RoastingBatchRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +14,8 @@ import java.util.List;
 
 @Component
 public class StockLossService {
+
+    private static final Logger logger = LoggerFactory.getLogger(StockLossService.class);
 
     private final CoffeeBagRepo coffeeBagRepo;
     private final RoastingBatchRepo roastingBatchRepo;
@@ -20,35 +25,48 @@ public class StockLossService {
         this.roastingBatchRepo = roastingBatchRepo;
     }
 
-    @Transactional
     public void updateStock(RoastingBatchEntity batch){
-        List<CoffeeBagEntity> bags = coffeeBagRepo.findByCountryAndSortWithWeightLeftNotZero(batch.getOriginCountry(), batch.getCoffeeSort());
-        //!!considering that received messages are correct, batch.inWeight always less then sum of bagS.leftWeight
-        int toSubstractWeight = batch.getInputWeight(); // 120 000  // 50 000
-        Integer sumStock = coffeeBagRepo.sumWeightLeftByOriginCountryAndCoffeeSort(batch.getCoffeeSort(), batch.getOriginCountry());
-        int bagsIndex = 0;
-        while(toSubstractWeight>0 & bagsIndex<bags.size()){
-            CoffeeBagEntity bag = bags.get(bagsIndex);
-            int toRecordWeight=0;
-            if(toSubstractWeight >= bag.getWeightLeft()){
-                toSubstractWeight -= bag.getWeightLeft();
+        try{
+            List<CoffeeBagEntity> bags = coffeeBagRepo.findByCountryAndSortWithWeightLeftNotZero(batch.getOriginCountry(), batch.getCoffeeSort());
+            //!!considering that received messages are correct, batch.inWeight always less then sum of bagS.leftWeight
+            int toSubstractWeight = batch.getInputWeight(); // 120 000  // 50 000
+            Integer sumStock = coffeeBagRepo.sumWeightLeftByOriginCountryAndCoffeeSort(batch.getCoffeeSort(), batch.getOriginCountry());
+            int bagsIndex = 0;
+            while(toSubstractWeight>0 & bagsIndex<bags.size()){
+                CoffeeBagEntity bag = bags.get(bagsIndex);
+                int toRecordWeight=0;
+                if(toSubstractWeight >= bag.getWeightLeft()){
+                    toSubstractWeight -= bag.getWeightLeft();
+                }
+                else{
+                    toRecordWeight = bag.getWeightLeft()-toSubstractWeight;
+                    toSubstractWeight=0;
+                }
+                bag.setWeightLeft(toRecordWeight);
+                coffeeBagRepo.save(bag);
+                bagsIndex++;
             }
-            else{
-                toRecordWeight = bag.getWeightLeft()-toSubstractWeight;
-                toSubstractWeight=0;
-            }
-            bag.setWeightLeft(toRecordWeight);
-            coffeeBagRepo.save(bag);
-            bagsIndex++;
+        } catch (Exception e){
+            logger.error("Failed update stock for roasing batch from country : {} and with team id: {}", batch.getOriginCountry(), batch.getStringTeamId(), e);
         }
+
     }
 
     @Transactional
-    public void updateLoss(Long batchId, int input, int output){
+    public int updateLoss(Long batchId, int input, int output){
         //weight loss calculation:
         double loss = (input-output)*100/input;
+        logger.error("counted loss percentage : {}", loss);
         //update value
-        roastingBatchRepo.updateLossPercentage(batchId, loss);
+        int rowsUpdated = roastingBatchRepo.updateLossPercentage(batchId, loss);
+        roastingBatchRepo.flush();
+
+        if(rowsUpdated >0){
+            logger.error("updated loss percentage for roasing batch with id : {}", batchId);
+        } else{
+            logger.error("updated {} rows for loss percentage for roasing batch with id : {}", rowsUpdated, batchId);
+        }
+        return  rowsUpdated;
     }
 
     public int getFilteredStock(String country, Integer coffeeSort) {
