@@ -2,7 +2,6 @@ package com.coffee.kafkaspringproject.service;
 
 import com.coffee.kafkaspringproject.entity.CoffeeBagEntity;
 import com.coffee.kafkaspringproject.entity.RoastingBatchEntity;
-import com.coffee.kafkaspringproject.listener.CoffeeBagListener;
 import com.coffee.kafkaspringproject.repo.CoffeeBagRepo;
 import com.coffee.kafkaspringproject.repo.RoastingBatchRepo;
 import org.slf4j.Logger;
@@ -53,13 +52,12 @@ public class StockLossService {
     }
 
     @Transactional
-    public int updateLoss(Long batchId, int input, int output){
+    public double updateLoss(Long batchId, int input, int output){
         //weight loss calculation:
         double loss = (input-output)*100/input;
         logger.error("counted loss percentage : {}", loss);
         //update value
         int rowsUpdated = roastingBatchRepo.updateLossPercentage(batchId, loss);
-        roastingBatchRepo.flush();
 
         if(rowsUpdated >0){
             logger.error("updated loss percentage for roasing batch with id : {}", batchId);

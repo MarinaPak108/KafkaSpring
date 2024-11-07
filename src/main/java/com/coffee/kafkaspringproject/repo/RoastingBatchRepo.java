@@ -6,14 +6,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Repository
 public interface RoastingBatchRepo extends JpaRepository<RoastingBatchEntity, Long> {
     //update loss percentage by batchId
-    @Modifying() //to indicate that it's an update operation rather than a select
+    @Modifying(clearAutomatically = true) //to indicate that it's an update operation rather than a select
     @Query("UPDATE RoastingBatchEntity b SET b.lossPercentage = :lossPercentage WHERE b.batchId = :id")
     int updateLossPercentage(@Param("id") Long id, @Param("lossPercentage") double lossPercentage);
     //filter by teamId and get mean loss percentage value
